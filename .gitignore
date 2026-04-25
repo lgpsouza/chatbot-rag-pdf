@@ -1,0 +1,71 @@
+# ─── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.spec
+
+# ─── Ambiente Virtual ─────────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+.python-version
+
+# ─── Variáveis de Ambiente ────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ─── Cache de Embeddings e Vetores ────────────────────────────────────────────
+.chroma/
+chroma_db/
+faiss_index/
+vector_store/
+embeddings_cache/
+*.pkl
+*.npy
+*.npz
+*.faiss
+
+# ─── PDFs Locais ──────────────────────────────────────────────────────────────
+data/
+pdfs/
+uploads/
+*.pdf
+
+# ─── LangChain / LangSmith ────────────────────────────────────────────────────
+.langchain/
+langchain.db
+
+# ─── Jupyter Notebooks ────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ─── Logs e Temporários ───────────────────────────────────────────────────────
+*.log
+*.tmp
+*.bak
+logs/
+tmp/
+
+# ─── Configurações de Editor ──────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ─── Cobertura de Testes ──────────────────────────────────────────────────────
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
