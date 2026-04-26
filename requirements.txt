@@ -7,3 +7,5 @@ chromadb
 pypdf
 python-dotenv
 streamlit
+pytest
+pytest-cov

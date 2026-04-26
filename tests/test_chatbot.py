@@ -1,11 +1,9 @@
-import sys
+import importlib
 import warnings
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
-
-sys.path.insert(0, str(Path(__file__).parent.parent / "app"))
 
 
 # ── pdf_loader ────────────────────────────────────────────────────────────────
@@ -23,7 +21,6 @@ def test_carregar_pdfs_retorna_documentos(tmp_path, monkeypatch):
 
     pdf_fake = tmp_path / "teste.pdf"
     pdf_fake.write_bytes(b"%PDF-1.4 fake")
-
     monkeypatch.setattr(pdf_loader, "DATA_DIR", tmp_path)
 
     chunk = Document(page_content="Conteúdo do documento de teste.", metadata={})
@@ -41,7 +38,6 @@ def test_pdf_scan_sem_texto_emite_aviso(tmp_path, monkeypatch):
 
     pdf_fake = tmp_path / "scan.pdf"
     pdf_fake.write_bytes(b"%PDF-1.4 fake")
-
     monkeypatch.setattr(pdf_loader, "DATA_DIR", tmp_path)
 
     chunk_vazio = Document(page_content="   ", metadata={})
@@ -61,7 +57,6 @@ def test_pdf_scan_sem_texto_emite_aviso(tmp_path, monkeypatch):
 
 def test_chatbot_sem_api_key(monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    import importlib
     import chatbot as chatbot_module
     importlib.reload(chatbot_module)
     with pytest.raises(EnvironmentError, match="OPENAI_API_KEY"):
@@ -69,15 +64,12 @@ def test_chatbot_sem_api_key(monkeypatch):
 
 
 def test_perguntar_retorna_string(monkeypatch):
-    monkeypatch.setenv("OPENAI_API_KEY", "sk-fake")
-
     mock_chain = MagicMock()
     mock_chain.invoke.return_value = "Resposta simulada."
 
     mock_vectorstore = MagicMock()
     mock_vectorstore.as_retriever.return_value = MagicMock()
 
-    import importlib
     import chatbot as chatbot_module
     importlib.reload(chatbot_module)
 
@@ -90,3 +82,40 @@ def test_perguntar_retorna_string(monkeypatch):
 
     assert isinstance(resposta, str)
     assert resposta != ""
+
+
+def test_perguntar_nao_retorna_vazio_em_contexto_pobre(monkeypatch):
+    """Chain com contexto sem informação útil deve retornar string, não vazio."""
+    mock_chain = MagicMock()
+    mock_chain.invoke.return_value = (
+        "Não encontrei informações suficientes nos documentos para responder."
+    )
+
+    import chatbot as chatbot_module
+    importlib.reload(chatbot_module)
+
+    with patch("chatbot.construir_vectorstore", return_value=MagicMock()), \
+         patch("chatbot.ChatOpenAI"), \
+         patch.object(chatbot_module.Chatbot, "__init__", lambda self: None):
+        bot = chatbot_module.Chatbot()
+        bot.chain = mock_chain
+        resposta = bot.perguntar("Qual é a cor do céu em Marte?")
+
+    assert isinstance(resposta, str)
+    assert len(resposta) > 0
+
+
+def test_vectorstore_vazio_emite_aviso(tmp_path, monkeypatch):
+    """vector_store/ existente mas vazio deve emitir warning."""
+    import embeddings as emb_module
+
+    vs_vazio = tmp_path / "vector_store"
+    vs_vazio.mkdir()
+    monkeypatch.setattr(emb_module, "VECTOR_STORE_DIR", vs_vazio)
+
+    with patch("embeddings.carregar_pdfs", return_value=[]), \
+         warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        with pytest.raises(ValueError):
+            emb_module.construir_vectorstore()
+        assert any("vazio" in str(x.message) for x in w)

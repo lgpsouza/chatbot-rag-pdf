@@ -19,10 +19,16 @@ def carregar_chatbot() -> Chatbot:
 try:
     bot = carregar_chatbot()
 except EnvironmentError as e:
+    st.cache_resource.clear()
     st.error(str(e))
     st.stop()
 except ValueError as e:
+    st.cache_resource.clear()
     st.warning(str(e))
+    st.stop()
+except Exception as e:
+    st.cache_resource.clear()
+    st.error(f"Erro inesperado ao inicializar o chatbot: {e}")
     st.stop()
 
 if "messages" not in st.session_state:
