@@ -71,7 +71,7 @@ O `load_dotenv()` é chamado em `app/interface.py` e `app/main.py` antes de qual
 
 ## Testes
 
-Os testes ficam em `tests/test_chatbot.py` (15 testes, todos passando). `tests/conftest.py` define `OPENAI_API_KEY=sk-fake-test-key` via fixture `autouse`.
+Os testes ficam em `tests/test_chatbot.py` (19 testes, todos passando). `tests/conftest.py` define `OPENAI_API_KEY=sk-fake-test-key` via fixture `autouse`.
 
 | Teste | O que valida |
 | --- | --- |
@@ -83,6 +83,9 @@ Os testes ficam em `tests/test_chatbot.py` (15 testes, todos passando). `tests/c
 | `test_vectorstore_novo_emite_aviso_de_custo` | Nova geração emite aviso de crédito |
 | `test_vectorstore_vazio_emite_aviso` | Diretório vazio lança `ValueError` com aviso |
 | `test_construir_vectorstore_sem_permissao_de_escrita` | `PermissionError` quando sem acesso ao diretório |
+| `test_vectorstore_reutilizado_quando_hashes_coincidem` | Hash MD5 igual ao manifest → reutiliza sem rebuild |
+| `test_vectorstore_reconstruido_quando_pdf_alterado` | Hash divergente → rebuild + warning "PDFs alterados" |
+| `test_upload_path_traversal_sanitizacao` | `Path(nome).name` extrai apenas basename |
 | `test_chatbot_sem_api_key` | `EnvironmentError` quando `OPENAI_API_KEY` ausente |
 | `test_perguntar_retorna_string` | `perguntar()` retorna `str` não vazia |
 | `test_perguntar_nao_retorna_vazio_em_contexto_pobre` | Contexto insuficiente retorna frase informativa |
@@ -90,14 +93,15 @@ Os testes ficam em `tests/test_chatbot.py` (15 testes, todos passando). `tests/c
 | `test_perguntar_string_muito_longa` | Pergunta > 4096 chars retorna "Limite de" sem chamar a chain |
 | `test_rate_limit_retorna_mensagem_amigavel` | `RateLimitError` retorna mensagem amigável |
 | `test_api_error_retorna_mensagem_amigavel` | `APIError` retorna mensagem amigável |
+| `test_timeout_retorna_mensagem_amigavel` | `APITimeoutError` retorna "Tempo limite" |
 
 Cobertura atual: `pdf_loader` 100%, `embeddings` 100%, `chatbot` 94%. Todos os testes usam mocks — nenhum faz chamada real à API OpenAI.
 
 ## Roadmap
 
-- **v0.1 (atual)** — Pipeline RAG com interface Streamlit
-- **v0.2** — Histórico persistido entre sessões + reranking
-- **v0.3** — Upload de PDFs via interface + Docker + CI
+- **v0.1** — Pipeline RAG com interface Streamlit ✅
+- **v0.2** — Invalidação por hash, limite de upload, path traversal ✅
+- **v0.3** — Histórico persistido entre sessões + Docker + CI
 
 ## Documentação de referência
 

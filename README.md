@@ -178,7 +178,7 @@ flowchart LR
 .venv/bin/pytest tests/ -v --cov=app --cov-report=term-missing
 ```
 
-**16 testes, todos passando. Nenhum faz chamada real à API OpenAI.**
+**19 testes, todos passando. Nenhum faz chamada real à API OpenAI.**
 
 | Módulo | Cobertura |
 | --- | --- |
@@ -186,7 +186,7 @@ flowchart LR
 | `embeddings.py` | 100% |
 | `chatbot.py` | 94% |
 
-Cenários cobertos: diretório vazio, PDF válido, PDF de imagem sem texto (warning), PDF corrompido, vectorstore reutilizado, aviso de custo de embeddings, vectorstore vazio, erro de permissão de escrita, ausência de API key, resposta válida, contexto insuficiente, entrada vazia, entrada muito longa, `RateLimitError`, `APIError`, `APITimeoutError`.
+Cenários cobertos: diretório vazio, PDF válido, PDF de imagem sem texto (warning), PDF corrompido, vectorstore reutilizado (hash igual), vectorstore reconstruído (hash divergente), aviso de custo de embeddings, vectorstore vazio, erro de permissão de escrita, sanitização de path traversal no upload, ausência de API key, resposta válida, contexto insuficiente, entrada vazia, entrada muito longa, `RateLimitError`, `APIError`, `APITimeoutError`, `APITimeoutError`.
 
 ---
 
@@ -212,9 +212,11 @@ Cenários cobertos: diretório vazio, PDF válido, PDF de imagem sem texto (warn
 - [x] Tratamento de erros de API (`RateLimitError`, `APIError`, `APITimeoutError`)
 - [x] Suite de testes unitários com mocks (16 testes, 100% nos módulos de negócio)
 
-### v0.2 — Qualidade
+### v0.2 — Qualidade ✅
 
-- [ ] Invalidação seletiva do vectorstore por hash de arquivo
+- [x] Invalidação seletiva do vectorstore por hash de arquivo (manifest JSON com MD5)
+- [x] Limite de tamanho no upload de PDFs (50 MB)
+- [x] Proteção contra path traversal no nome do arquivo enviado
 - [ ] Histórico de conversa persistido entre sessões
 - [ ] Reranking dos chunks recuperados
 
