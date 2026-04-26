@@ -1,4 +1,3 @@
-import shutil
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -8,7 +7,7 @@ load_dotenv()
 import streamlit as st
 
 from chatbot import Chatbot
-from embeddings import VECTOR_STORE_DIR
+from embeddings import VECTOR_STORE_DIR, invalidar_vectorstore
 from pdf_loader import DATA_DIR, validar_pdf
 
 st.set_page_config(page_title="Chatbot RAG", page_icon="🤖", layout="centered")
@@ -104,12 +103,7 @@ with st.sidebar:
         type="primary" if precisa_reindexar else "secondary",
         disabled=not pdfs,
     ):
-        try:
-            if VECTOR_STORE_DIR.exists():
-                shutil.rmtree(VECTOR_STORE_DIR)
-        except OSError as e:
-            st.error(f"Erro ao apagar vectorstore: {e}")
-            st.stop()
+        invalidar_vectorstore()
         st.cache_resource.clear()
         st.session_state.precisa_reindexar = False
         st.rerun()

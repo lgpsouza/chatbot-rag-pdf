@@ -60,6 +60,13 @@ def _verificar_permissao(path: Path) -> None:
 
 # ── API pública ────────────────────────────────────────────────────────────────
 
+def invalidar_vectorstore() -> None:
+    """Remove o manifest para forçar rebuild na próxima chamada a construir_vectorstore."""
+    manifest_path = VECTOR_STORE_DIR / _MANIFEST
+    if manifest_path.exists():
+        manifest_path.unlink()
+
+
 def construir_vectorstore(documentos: list[Document] | None = None) -> Chroma:
     embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
     pdfs_atuais = sorted(DATA_DIR.glob("*.pdf"))
@@ -70,9 +77,16 @@ def construir_vectorstore(documentos: list[Document] | None = None) -> Chroma:
                 persist_directory=str(VECTOR_STORE_DIR),
                 embedding_function=embeddings,
             )
-        warnings.warn(
-            "PDFs alterados detectados. Reconstruindo vectorstore."
-        )
+        warnings.warn("PDFs alterados detectados. Reconstruindo vectorstore.")
+        # Apaga a coleção sem deletar o arquivo SQLite — evita SQLITE_READONLY_DBMOVED
+        # causado pelo singleton interno do ChromaDB que reutiliza conexões por path.
+        try:
+            Chroma(
+                persist_directory=str(VECTOR_STORE_DIR),
+                embedding_function=embeddings,
+            ).delete_collection()
+        except Exception:
+            pass
 
     vs_existe = VECTOR_STORE_DIR.exists()
     if vs_existe and not _vs_populado():
