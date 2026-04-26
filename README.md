@@ -135,18 +135,18 @@ flowchart LR
     classDef infra fill:#92400e,stroke:#78350f,color:#fff
     classDef api   fill:#5b21b6,stroke:#3b0764,color:#fff
 
-    User([Usuário]):::user
+    User([Usuario]):::user
 
-    subgraph APP[Aplicação]
-        UI[interface.py\nStreamlit]:::app
-        Bot[chatbot.py\nRAG Chain]:::app
-        Emb[embeddings.py\nVectorStore]:::app
-        Ldr[pdf_loader.py\nProcessor]:::app
+    subgraph APP[Aplicacao]
+        UI[interface.py]:::app
+        Bot[chatbot.py]:::app
+        Emb[embeddings.py]:::app
+        Ldr[pdf_loader.py]:::app
     end
 
     subgraph INFRA[Local]
-        VS[(ChromaDB\nvector_store/)]:::infra
-        PDF[(PDFs\ndata/)]:::infra
+        VS[(vector_store)]:::infra
+        PDF[(data/)]:::infra
     end
 
     subgraph OAI[OpenAI API]
