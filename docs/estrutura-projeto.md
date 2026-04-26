@@ -21,6 +21,7 @@ mini_projeto_modulo_01_ufg/
 ├── vector_store/             # Índice vetorial (ignorado pelo git)
 │
 ├── tests/
+│   ├── conftest.py               # Fixture autouse: OPENAI_API_KEY=fake para todos os testes
 │   └── test_chatbot.py
 │
 ├── docs/                     # Documentação do projeto

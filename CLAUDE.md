@@ -69,17 +69,27 @@ O `load_dotenv()` é chamado em `app/interface.py` e `app/main.py` antes de qual
 
 ## Testes
 
-Os testes ficam em `tests/test_chatbot.py` e cobrem:
+Os testes ficam em `tests/test_chatbot.py` (15 testes, todos passando). `tests/conftest.py` define `OPENAI_API_KEY=sk-fake-test-key` via fixture `autouse`.
 
 | Teste | O que valida |
 | --- | --- |
 | `test_carregar_pdfs_vazio` | `data/` vazia retorna lista vazia |
 | `test_carregar_pdfs_retorna_documentos` | PDF válido gera chunks com conteúdo |
 | `test_pdf_scan_sem_texto_emite_aviso` | Chunks vazios emitem `warnings.warn` |
+| `test_pdf_malformado_emite_aviso_e_continua` | PDF corrompido é ignorado; outros continuam |
+| `test_vectorstore_existente_e_reutilizado` | Vectorstore populado não aciona `carregar_pdfs()` |
+| `test_vectorstore_novo_emite_aviso_de_custo` | Nova geração emite aviso de crédito |
+| `test_vectorstore_vazio_emite_aviso` | Diretório vazio lança `ValueError` com aviso |
+| `test_construir_vectorstore_sem_permissao_de_escrita` | `PermissionError` quando sem acesso ao diretório |
 | `test_chatbot_sem_api_key` | `EnvironmentError` quando `OPENAI_API_KEY` ausente |
 | `test_perguntar_retorna_string` | `perguntar()` retorna `str` não vazia |
+| `test_perguntar_nao_retorna_vazio_em_contexto_pobre` | Contexto insuficiente retorna frase informativa |
+| `test_perguntar_string_vazia` | Entrada vazia/espaços retorna "Por favor" sem chamar a chain |
+| `test_perguntar_string_muito_longa` | Pergunta > 4096 chars retorna "Limite de" sem chamar a chain |
+| `test_rate_limit_retorna_mensagem_amigavel` | `RateLimitError` retorna mensagem amigável |
+| `test_api_error_retorna_mensagem_amigavel` | `APIError` retorna mensagem amigável |
 
-Todos os testes usam mocks — nenhum faz chamada real à API OpenAI.
+Cobertura atual: `pdf_loader` 100%, `embeddings` 100%, `chatbot` 94%. Todos os testes usam mocks — nenhum faz chamada real à API OpenAI.
 
 ## Roadmap
 

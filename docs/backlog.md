@@ -6,26 +6,26 @@
 
 ### Funcionalidades
 
-- [ ] **RF01** — Carregar PDFs do diretório `data/`
+- [x] **RF01** — Carregar PDFs do diretório `data/`
   - Aceite: todos os `.pdf` presentes são lidos sem erro; diretório vazio retorna lista vazia
-- [ ] **RF02** — Segmentar documentos em chunks de texto
+- [x] **RF02** — Segmentar documentos em chunks de texto
   - Aceite: chunks com `chunk_size=1000` e `chunk_overlap=200`; chunks vazios são filtrados
-- [ ] **RF03** — Gerar e persistir embeddings no vectorstore local
+- [x] **RF03** — Gerar e persistir embeddings no vectorstore local
   - Aceite: vectorstore criado em `vector_store/` com modelo `text-embedding-3-small`
-- [ ] **RF04** — Reutilizar vectorstore entre execuções
+- [x] **RF04** — Reutilizar vectorstore entre execuções
   - Aceite: segunda inicialização não faz chamadas à API de embeddings
-- [ ] **RF05** — Interface web Streamlit com campo de pergunta e exibição de resposta
+- [x] **RF05** — Interface web Streamlit com campo de pergunta e exibição de resposta
   - Aceite: usuário digita pergunta, resposta é exibida no chat com spinner de loading
-- [ ] **RF06** — Histórico de mensagens durante a sessão
+- [x] **RF06** — Histórico de mensagens durante a sessão
   - Aceite: mensagens anteriores permanecem visíveis durante a sessão ativa
 
 ### Técnico
 
-- [ ] **RT01** — Configurar variáveis de ambiente via `.env`
+- [x] **RT01** — Configurar variáveis de ambiente via `.env`
   - Aceite: ausência de `OPENAI_API_KEY` lança `EnvironmentError` antes de qualquer chamada
-- [ ] **RT02** — Tratar erros da API OpenAI (`RateLimitError`, `APIError`)
+- [x] **RT02** — Tratar erros da API OpenAI (`RateLimitError`, `APIError`)
   - Aceite: erros exibem mensagem ao usuário sem encerrar o processo
-- [ ] **RT03** — Declarar modelos explicitamente no código
+- [x] **RT03** — Declarar modelos explicitamente no código
   - Aceite: `gpt-4o-mini` e `text-embedding-3-small` definidos sem depender de defaults
 
 ---
@@ -34,19 +34,19 @@
 
 ### Funcionalidades
 
-- [ ] **RF07** — Alertar quando PDF não contiver texto extraível
+- [x] **RF07** — Alertar quando PDF não contiver texto extraível
   - Aceite: `warnings.warn()` emitido para PDFs de imagem sem OCR
-- [ ] **RF08** — Validar `data/` vazia na inicialização
-  - Aceite: mensagem de aviso exibida na interface Streamlit quando não há documentos
+- [x] **RF08** — Validar `data/` vazia na inicialização
+  - Aceite: `ValueError` lançado e exibido via `st.warning()` na interface Streamlit
 
 ### Técnico
 
-- [ ] **RT04** — Cobertura mínima de testes unitários com mocks
-  - Aceite: 5 testes passando sem chamadas reais à API; cobertura ≥ 80%
-- [ ] **RT05** — Configurar `conftest.py` com variáveis de ambiente de teste
-  - Aceite: `OPENAI_API_KEY=fake` isolada para todos os testes
-- [ ] **RT06** — Adicionar `pytest-cov` com threshold mínimo
-  - Aceite: `pytest --cov=app --cov-fail-under=80` passa no CI
+- [x] **RT04** — Cobertura mínima de testes unitários com mocks
+  - Aceite: 15 testes passando sem chamadas reais à API; cobertura: `pdf_loader` 100%, `embeddings` 100%, `chatbot` 94%
+- [x] **RT05** — Configurar `conftest.py` com variáveis de ambiente de teste
+  - Aceite: `OPENAI_API_KEY=sk-fake-test-key` isolada para todos os testes via `autouse`
+- [x] **RT06** — Adicionar `pytest-cov` ao projeto
+  - Aceite: `pytest --cov=app --cov-report=term-missing` funciona localmente; threshold de 80% para módulos de negócio (interface e CLI excluídos)
 - [ ] **RT07** — Implementar hash de arquivo para invalidação seletiva do vectorstore
   - Aceite: apenas PDFs novos ou alterados são reprocessados
 

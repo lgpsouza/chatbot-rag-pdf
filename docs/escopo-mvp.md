@@ -52,10 +52,10 @@ Desenvolver um chatbot conversacional com interface web (Streamlit) capaz de res
 
 ## Critérios de Aceite do MVP
 
-- [ ] O chatbot responde perguntas sobre o conteúdo de ao menos um PDF válido
-- [ ] O vectorstore é reutilizado entre execuções sem reprocessar os PDFs
-- [ ] O histórico de mensagens é exibido corretamente durante a sessão Streamlit
-- [ ] Perguntas sem resposta nos documentos retornam mensagem informativa, não alucinação silenciosa
-- [ ] PDFs sem texto exibem aviso em vez de falha silenciosa
-- [ ] Ausência de `OPENAI_API_KEY` gera erro descritivo antes de qualquer chamada à API
-- [ ] Todos os testes unitários passam sem chamadas reais à API OpenAI
+- [x] O chatbot responde perguntas sobre o conteúdo de ao menos um PDF válido
+- [x] O vectorstore é reutilizado entre execuções sem reprocessar os PDFs
+- [x] O histórico de mensagens é exibido corretamente durante a sessão Streamlit
+- [x] Perguntas sem resposta nos documentos retornam mensagem informativa, não alucinação silenciosa
+- [x] PDFs sem texto exibem aviso em vez de falha silenciosa
+- [x] Ausência de `OPENAI_API_KEY` gera erro descritivo antes de qualquer chamada à API
+- [x] Todos os testes unitários passam sem chamadas reais à API OpenAI (15/15 passando)
