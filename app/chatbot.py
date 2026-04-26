@@ -1,6 +1,7 @@
 import os
 from typing import Sequence
 
+from langchain_community.vectorstores import Chroma
 from langchain_core.documents import Document
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
@@ -9,6 +10,8 @@ from langchain_openai import ChatOpenAI
 from openai import APIError, RateLimitError
 
 from embeddings import construir_vectorstore
+
+MAX_PERGUNTA_CHARS = 4096
 
 _PROMPT = ChatPromptTemplate.from_template(
     "Responda a pergunta usando apenas o contexto abaixo.\n"
@@ -25,22 +28,27 @@ def _format_docs(docs: Sequence[Document]) -> str:
 
 
 class Chatbot:
-    def __init__(self):
+    def __init__(self, vectorstore: Chroma | None = None):
         if not os.getenv("OPENAI_API_KEY"):
             raise EnvironmentError("OPENAI_API_KEY não definida. Configure o arquivo .env.")
 
-        vectorstore = construir_vectorstore()
+        if vectorstore is None:
+            vectorstore = construir_vectorstore()
+
         llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, timeout=30, max_retries=2)
-        retriever = vectorstore.as_retriever()
 
         self.chain = (
-            {"context": retriever | _format_docs, "question": RunnablePassthrough()}
+            {"context": vectorstore.as_retriever() | _format_docs, "question": RunnablePassthrough()}
             | _PROMPT
             | llm
             | StrOutputParser()
         )
 
     def perguntar(self, pergunta: str) -> str:
+        if not pergunta.strip():
+            return "Por favor, digite uma pergunta."
+        if len(pergunta) > MAX_PERGUNTA_CHARS:
+            return f"Pergunta muito longa. Limite de {MAX_PERGUNTA_CHARS} caracteres."
         try:
             return self.chain.invoke(pergunta)
         except RateLimitError:

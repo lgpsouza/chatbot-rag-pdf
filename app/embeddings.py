@@ -1,3 +1,4 @@
+import os
 import warnings
 from pathlib import Path
 
@@ -10,7 +11,7 @@ from pdf_loader import carregar_pdfs
 VECTOR_STORE_DIR = Path(__file__).parent.parent / "vector_store"
 
 
-def construir_vectorstore() -> Chroma:
+def construir_vectorstore(documentos: list[Document] | None = None) -> Chroma:
     embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 
     vs_existe = VECTOR_STORE_DIR.exists()
@@ -28,10 +29,19 @@ def construir_vectorstore() -> Chroma:
             "PDFs serão reprocessados e novos embeddings serão gerados."
         )
 
-    documentos: list[Document] = carregar_pdfs()
+    if documentos is None:
+        documentos = carregar_pdfs()
+
     if not documentos:
         raise ValueError(
             "Nenhum documento encontrado. Adicione arquivos PDF na pasta data/."
+        )
+
+    target_dir = VECTOR_STORE_DIR if vs_existe else VECTOR_STORE_DIR.parent
+    if not os.access(target_dir, os.W_OK):
+        raise PermissionError(
+            f"Sem permissão de escrita em {target_dir}. "
+            "Verifique as permissões do diretório."
         )
 
     warnings.warn(

@@ -2,14 +2,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from pathlib import Path
-
 import streamlit as st
 
 from chatbot import Chatbot
-
-DATA_DIR = Path(__file__).parent.parent / "data"
-VECTOR_STORE_DIR = Path(__file__).parent.parent / "vector_store"
+from embeddings import VECTOR_STORE_DIR
+from pdf_loader import DATA_DIR
 
 st.set_page_config(page_title="Chatbot RAG", page_icon="🤖", layout="centered")
 
@@ -72,13 +69,17 @@ for msg in st.session_state.messages:
         st.markdown(msg["content"])
 
 if pergunta := st.chat_input("Digite sua pergunta..."):
-    st.session_state.messages.append({"role": "user", "content": pergunta})
-    with st.chat_message("user"):
-        st.markdown(pergunta)
+    pergunta_limpa = pergunta.strip()
+    if not pergunta_limpa:
+        st.warning("Por favor, digite uma pergunta válida.")
+    else:
+        st.session_state.messages.append({"role": "user", "content": pergunta_limpa})
+        with st.chat_message("user"):
+            st.markdown(pergunta_limpa)
 
-    with st.chat_message("assistant"):
-        with st.spinner("Buscando resposta nos documentos..."):
-            resposta = bot.perguntar(pergunta)
-        st.markdown(resposta)
+        with st.chat_message("assistant"):
+            with st.spinner("Buscando resposta nos documentos..."):
+                resposta = bot.perguntar(pergunta_limpa)
+            st.markdown(resposta)
 
-    st.session_state.messages.append({"role": "assistant", "content": resposta})
+        st.session_state.messages.append({"role": "assistant", "content": resposta})
