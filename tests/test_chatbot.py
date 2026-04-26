@@ -136,6 +136,42 @@ def test_perguntar_nao_retorna_vazio_em_contexto_pobre(monkeypatch):
     assert len(resposta) > 0
 
 
+def test_vectorstore_existente_e_reutilizado(tmp_path, monkeypatch):
+    """vectorstore populado deve ser reutilizado sem chamar carregar_pdfs."""
+    import embeddings as emb_module
+    from langchain_community.vectorstores import Chroma
+
+    vs_dir = tmp_path / "vector_store"
+    vs_dir.mkdir()
+    (vs_dir / "chroma.sqlite3").write_bytes(b"fake")
+    monkeypatch.setattr(emb_module, "VECTOR_STORE_DIR", vs_dir)
+
+    with patch("embeddings.Chroma") as mock_chroma, \
+         patch("embeddings.carregar_pdfs") as mock_loader:
+        mock_chroma.return_value = MagicMock(spec=Chroma)
+        emb_module.construir_vectorstore()
+        mock_loader.assert_not_called()
+
+
+def test_vectorstore_novo_emite_aviso_de_custo(tmp_path, monkeypatch):
+    """Geração de novos embeddings deve emitir aviso de custo."""
+    import embeddings as emb_module
+    from langchain_core.documents import Document
+
+    vs_dir = tmp_path / "vector_store"
+    monkeypatch.setattr(emb_module, "VECTOR_STORE_DIR", vs_dir)
+
+    doc = Document(page_content="Texto de teste.", metadata={})
+    with patch("embeddings.carregar_pdfs", return_value=[doc]), \
+         patch("embeddings.Chroma") as mock_chroma, \
+         patch("embeddings.OpenAIEmbeddings"), \
+         warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        mock_chroma.from_documents.return_value = MagicMock()
+        emb_module.construir_vectorstore()
+        assert any("consome créditos" in str(x.message) for x in w)
+
+
 def test_vectorstore_vazio_emite_aviso(tmp_path, monkeypatch):
     """vector_store/ existente mas vazio deve emitir warning."""
     import embeddings as emb_module
