@@ -15,6 +15,8 @@ st.set_page_config(page_title="Chatbot RAG", page_icon="🤖", layout="centered"
 
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
+MAX_PDF_MB = 50
+
 
 # ── Barra lateral ─────────────────────────────────────────────────────────────
 
@@ -36,14 +38,21 @@ with st.sidebar:
             f for f in uploaded_files
             if Path(f.name).name not in st.session_state.saved_files
         ]
+        salvos = 0
         for f in novos:
             nome_seguro = Path(f.name).name
-            (DATA_DIR / nome_seguro).write_bytes(f.getvalue())
+            conteudo = f.getvalue()
+            if len(conteudo) > MAX_PDF_MB * 1024 * 1024:
+                st.warning(f"⚠️ {nome_seguro}: excede o limite de {MAX_PDF_MB} MB e foi ignorado.")
+                st.session_state.saved_files.add(nome_seguro)
+                continue
+            (DATA_DIR / nome_seguro).write_bytes(conteudo)
             st.session_state.saved_files.add(nome_seguro)
+            salvos += 1
 
-        if novos:
+        if salvos:
             st.session_state.precisa_reindexar = True
-            st.success(f"✅ {len(novos)} arquivo(s) salvo(s) em data/")
+            st.success(f"✅ {salvos} arquivo(s) salvo(s) em data/")
 
     st.divider()
 
@@ -74,8 +83,12 @@ with st.sidebar:
         type="primary" if precisa_reindexar else "secondary",
         disabled=not pdfs,
     ):
-        if VECTOR_STORE_DIR.exists():
-            shutil.rmtree(VECTOR_STORE_DIR)
+        try:
+            if VECTOR_STORE_DIR.exists():
+                shutil.rmtree(VECTOR_STORE_DIR)
+        except OSError as e:
+            st.error(f"Erro ao apagar vectorstore: {e}")
+            st.stop()
         st.cache_resource.clear()
         st.session_state.precisa_reindexar = False
         st.rerun()

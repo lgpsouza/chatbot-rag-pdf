@@ -84,10 +84,14 @@ def test_pdf_malformado_emite_aviso_e_continua(tmp_path, monkeypatch):
 def test_vectorstore_existente_e_reutilizado(tmp_path, monkeypatch):
     import embeddings as emb_module
 
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
     vs_dir = tmp_path / "vector_store"
     vs_dir.mkdir()
     (vs_dir / "chroma.sqlite3").write_bytes(b"fake")
+    (vs_dir / ".manifest.json").write_text("{}")
     monkeypatch.setattr(emb_module, "VECTOR_STORE_DIR", vs_dir)
+    monkeypatch.setattr(emb_module, "DATA_DIR", data_dir)
 
     with patch("embeddings.Chroma") as mock_chroma, \
          patch("embeddings.carregar_pdfs") as mock_loader:
@@ -100,7 +104,10 @@ def test_vectorstore_novo_emite_aviso_de_custo(tmp_path, monkeypatch):
     import embeddings as emb_module
     from langchain_core.documents import Document
 
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
     monkeypatch.setattr(emb_module, "VECTOR_STORE_DIR", tmp_path / "vector_store")
+    monkeypatch.setattr(emb_module, "DATA_DIR", data_dir)
 
     doc = Document(page_content="Texto de teste.", metadata={})
     with patch("embeddings.carregar_pdfs", return_value=[doc]), \
@@ -116,9 +123,12 @@ def test_vectorstore_novo_emite_aviso_de_custo(tmp_path, monkeypatch):
 def test_vectorstore_vazio_emite_aviso(tmp_path, monkeypatch):
     import embeddings as emb_module
 
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
     vs_vazio = tmp_path / "vector_store"
     vs_vazio.mkdir()
     monkeypatch.setattr(emb_module, "VECTOR_STORE_DIR", vs_vazio)
+    monkeypatch.setattr(emb_module, "DATA_DIR", data_dir)
 
     with patch("embeddings.carregar_pdfs", return_value=[]), \
          warnings.catch_warnings(record=True) as w:
@@ -132,7 +142,10 @@ def test_construir_vectorstore_sem_permissao_de_escrita(tmp_path, monkeypatch):
     import embeddings as emb_module
     from langchain_core.documents import Document
 
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
     monkeypatch.setattr(emb_module, "VECTOR_STORE_DIR", tmp_path / "vector_store")
+    monkeypatch.setattr(emb_module, "DATA_DIR", data_dir)
 
     doc = Document(page_content="Texto.", metadata={})
     with patch("embeddings.carregar_pdfs", return_value=[doc]), \
@@ -140,6 +153,73 @@ def test_construir_vectorstore_sem_permissao_de_escrita(tmp_path, monkeypatch):
          patch("embeddings.os.access", return_value=False):
         with pytest.raises(PermissionError, match="Sem permissão de escrita"):
             emb_module.construir_vectorstore()
+
+
+def test_vectorstore_reutilizado_quando_hashes_coincidem(tmp_path, monkeypatch):
+    import embeddings as emb_module
+    import hashlib
+    import json
+
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    pdf_bytes = b"%PDF-1.4 fake content"
+    (data_dir / "doc.pdf").write_bytes(pdf_bytes)
+
+    vs_dir = tmp_path / "vector_store"
+    vs_dir.mkdir()
+    (vs_dir / "chroma.sqlite3").write_bytes(b"fake")
+    hash_correto = hashlib.md5(pdf_bytes).hexdigest()
+    (vs_dir / ".manifest.json").write_text(json.dumps({"doc.pdf": hash_correto}))
+
+    monkeypatch.setattr(emb_module, "VECTOR_STORE_DIR", vs_dir)
+    monkeypatch.setattr(emb_module, "DATA_DIR", data_dir)
+
+    with patch("embeddings.Chroma") as mock_chroma, \
+         patch("embeddings.carregar_pdfs") as mock_loader:
+        mock_chroma.return_value = MagicMock()
+        emb_module.construir_vectorstore()
+        mock_loader.assert_not_called()
+        mock_chroma.from_documents.assert_not_called()
+
+
+def test_vectorstore_reconstruido_quando_pdf_alterado(tmp_path, monkeypatch):
+    import embeddings as emb_module
+    import json
+    from langchain_core.documents import Document
+
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    (data_dir / "doc.pdf").write_bytes(b"%PDF-1.4 fake")
+
+    vs_dir = tmp_path / "vector_store"
+    vs_dir.mkdir()
+    (vs_dir / "chroma.sqlite3").write_bytes(b"fake")
+    (vs_dir / ".manifest.json").write_text(json.dumps({"doc.pdf": "hash_antigo_invalido"}))
+
+    monkeypatch.setattr(emb_module, "VECTOR_STORE_DIR", vs_dir)
+    monkeypatch.setattr(emb_module, "DATA_DIR", data_dir)
+
+    doc = Document(page_content="Conteúdo novo.", metadata={})
+    with patch("embeddings.carregar_pdfs", return_value=[doc]), \
+         patch("embeddings.Chroma") as mock_chroma, \
+         patch("embeddings.OpenAIEmbeddings"), \
+         warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        mock_chroma.from_documents.return_value = MagicMock()
+        emb_module.construir_vectorstore()
+        assert any("PDFs alterados" in str(x.message) for x in w)
+
+    mock_chroma.from_documents.assert_called_once()
+
+
+def test_upload_path_traversal_sanitizacao():
+    casos = [
+        ("../../etc/passwd.pdf", "passwd.pdf"),
+        ("/absolute/path/doc.pdf", "doc.pdf"),
+        ("normal.pdf", "normal.pdf"),
+    ]
+    for entrada, esperado in casos:
+        assert Path(entrada).name == esperado
 
 
 # ── chatbot ───────────────────────────────────────────────────────────────────
