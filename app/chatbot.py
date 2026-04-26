@@ -1,5 +1,7 @@
 import os
+from typing import Sequence
 
+from langchain_core.documents import Document
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
@@ -9,13 +11,16 @@ from openai import APIError, RateLimitError
 from embeddings import construir_vectorstore
 
 _PROMPT = ChatPromptTemplate.from_template(
-    "Responda a pergunta usando apenas o contexto abaixo.\n\n"
+    "Responda a pergunta usando apenas o contexto abaixo.\n"
+    "Se o contexto não contiver informações suficientes, responda exatamente: "
+    "'Não encontrei informações sobre isso nos documentos fornecidos.'\n"
+    "Não invente respostas.\n\n"
     "Contexto:\n{context}\n\n"
     "Pergunta: {question}"
 )
 
 
-def _format_docs(docs) -> str:
+def _format_docs(docs: Sequence[Document]) -> str:
     return "\n\n".join(d.page_content for d in docs)
 
 

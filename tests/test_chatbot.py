@@ -116,10 +116,10 @@ def test_perguntar_retorna_string(monkeypatch):
 
 
 def test_perguntar_nao_retorna_vazio_em_contexto_pobre(monkeypatch):
-    """Chain com contexto sem informação útil deve retornar string, não vazio."""
+    """Chain com contexto sem informação útil deve retornar mensagem padrão definida no prompt."""
     mock_chain = MagicMock()
     mock_chain.invoke.return_value = (
-        "Não encontrei informações suficientes nos documentos para responder."
+        "Não encontrei informações sobre isso nos documentos fornecidos."
     )
 
     import chatbot as chatbot_module
