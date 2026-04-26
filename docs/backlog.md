@@ -2,7 +2,7 @@
 
 ---
 
-## Release 1 — Core (Carregamento e Busca)
+## Release 1 — Core (Carregamento, Busca e Interface)
 
 ### Funcionalidades
 
@@ -14,10 +14,10 @@
   - Aceite: vectorstore criado em `vector_store/` com modelo `text-embedding-3-small`
 - [ ] **RF04** — Reutilizar vectorstore entre execuções
   - Aceite: segunda inicialização não faz chamadas à API de embeddings
-- [ ] **RF05** — Receber perguntas via terminal e retornar respostas
-  - Aceite: pergunta em linguagem natural retorna resposta baseada nos documentos indexados
-- [ ] **RF06** — Encerrar sessão com comando "sair"
-  - Aceite: processo termina normalmente ao digitar "sair"
+- [ ] **RF05** — Interface web Streamlit com campo de pergunta e exibição de resposta
+  - Aceite: usuário digita pergunta, resposta é exibida no chat com spinner de loading
+- [ ] **RF06** — Histórico de mensagens durante a sessão
+  - Aceite: mensagens anteriores permanecem visíveis durante a sessão ativa
 
 ### Técnico
 
@@ -37,7 +37,7 @@
 - [ ] **RF07** — Alertar quando PDF não contiver texto extraível
   - Aceite: `warnings.warn()` emitido para PDFs de imagem sem OCR
 - [ ] **RF08** — Validar `data/` vazia na inicialização
-  - Aceite: `ValueError` descritivo quando não há documentos para indexar
+  - Aceite: mensagem de aviso exibida na interface Streamlit quando não há documentos
 
 ### Técnico
 
@@ -56,8 +56,8 @@
 
 ### Funcionalidades
 
-- [ ] **RF09** — Histórico de conversa (memória de contexto)
-  - Aceite: perguntas subsequentes consideram o contexto das anteriores
+- [ ] **RF09** — Histórico de conversa persistido entre sessões
+  - Aceite: perguntas e respostas anteriores são carregadas ao reiniciar a interface
 
 ### Técnico
 
@@ -66,6 +66,6 @@
 - [ ] **RT09** — Documentação de arquitetura e decisões técnicas
   - Aceite: `docs/` contém escopo, riscos, backlog e estrutura atualizados
 - [ ] **RT10** — Containerização com Docker
-  - Aceite: `docker build` e `docker run` executam o chatbot sem dependências locais
+  - Aceite: `docker build` e `docker run` sobem a interface Streamlit sem dependências locais
 - [ ] **RT11** — Pipeline CI com GitHub Actions
   - Aceite: testes executados automaticamente a cada push na branch `main`

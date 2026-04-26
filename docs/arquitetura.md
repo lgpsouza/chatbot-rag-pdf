@@ -9,11 +9,11 @@ flowchart LR
     classDef infra  fill:#92400e,stroke:#78350f,color:#fff
     classDef api    fill:#5b21b6,stroke:#3b0764,color:#fff
 
-    User([" Usuário CLI "]):::user
+    User([" Usuário "]):::user
 
     subgraph APP["  Aplicação  "]
         direction TB
-        Main["main.py\nLoop CLI"]:::app
+        UI["interface.py\nStreamlit UI"]:::app
         Chatbot["chatbot.py\nRAG Chain"]:::app
         Embeddings["embeddings.py\nVectorStore Builder"]:::app
         Loader["pdf_loader.py\nDocument Processor"]:::app
@@ -31,8 +31,8 @@ flowchart LR
         LLM["gpt-4o-mini"]:::api
     end
 
-    User       -->|" pergunta "| Main
-    Main       --> Chatbot
+    User       -->|" pergunta "| UI
+    UI         --> Chatbot
     Chatbot    --> Embeddings
 
     Embeddings -->|" existe? "| VS
@@ -47,8 +47,8 @@ flowchart LR
     VS         -->|" chunks relevantes "| Chatbot
     Chatbot    -->|" prompt + contexto "| LLM
     LLM        -->|" resposta "| Chatbot
-    Chatbot    -->|" resposta "| Main
-    Main       -->|" exibe "| User
+    Chatbot    -->|" resposta "| UI
+    UI         -->|" exibe no chat "| User
 ```
 
 ## Legenda de Cores
