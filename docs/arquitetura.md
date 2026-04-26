@@ -3,39 +3,59 @@
 ## Diagrama de Componentes e Fluxo de Dados
 
 ```mermaid
-flowchart TD
-    User([Usuário CLI]) -->|pergunta| Main
+flowchart LR
+    classDef user   fill:#1a6fa4,stroke:#0d4f74,color:#fff,rx:20
+    classDef app    fill:#276749,stroke:#1b4332,color:#fff
+    classDef infra  fill:#92400e,stroke:#78350f,color:#fff
+    classDef api    fill:#5b21b6,stroke:#3b0764,color:#fff
 
-    subgraph app["Aplicação"]
-        Main["main.py\nLoop CLI"]
-        Chatbot["chatbot.py\nChatbot / RAG Chain"]
-        Embeddings["embeddings.py\nVectorStore Builder"]
-        PDFLoader["pdf_loader.py\nDocument Processor"]
+    User([" Usuário CLI "]):::user
+
+    subgraph APP["  Aplicação  "]
+        direction TB
+        Main["main.py\nLoop CLI"]:::app
+        Chatbot["chatbot.py\nRAG Chain"]:::app
+        Embeddings["embeddings.py\nVectorStore Builder"]:::app
+        Loader["pdf_loader.py\nDocument Processor"]:::app
     end
 
-    subgraph infra["Infraestrutura Local"]
-        VectorStore[("vector_store/\nChromaDB")]
-        DataDir[("data/\nPDFs")]
+    subgraph INFRA["  Infraestrutura Local  "]
+        direction TB
+        VS[("ChromaDB\nvector_store/")]:::infra
+        PDF[("PDFs\ndata/")]:::infra
     end
 
-    subgraph openai["OpenAI API"]
-        EmbeddingsAPI["text-embedding-3-small"]
-        LLM["gpt-4o-mini"]
+    subgraph OAI["  OpenAI API  "]
+        direction TB
+        EMB["text-embedding-3-small"]:::api
+        LLM["gpt-4o-mini"]:::api
     end
 
-    Main --> Chatbot
-    Chatbot --> Embeddings
-    Embeddings -->|"existe?"| VectorStore
-    VectorStore -->|"reutiliza"| Embeddings
-    Embeddings --> PDFLoader
-    PDFLoader -->|"lê chunks"| DataDir
-    PDFLoader -->|"gera embeddings"| EmbeddingsAPI
-    EmbeddingsAPI -->|"vetores"| VectorStore
+    User       -->|" pergunta "| Main
+    Main       --> Chatbot
+    Chatbot    --> Embeddings
 
-    Chatbot -->|"retriever similarity search"| VectorStore
-    VectorStore -->|"chunks relevantes"| Chatbot
-    Chatbot -->|"prompt + contexto"| LLM
-    LLM -->|"resposta"| Chatbot
-    Chatbot -->|"resposta"| Main
-    Main -->|"exibe"| User
+    Embeddings -->|" existe? "| VS
+    VS         -. " reutiliza " .-> Embeddings
+
+    Embeddings --> Loader
+    Loader     -->|" lê chunks "| PDF
+    Loader     -->|" gera embeddings "| EMB
+    EMB        -->|" vetores "| VS
+
+    Chatbot    -->|" similarity search "| VS
+    VS         -->|" chunks relevantes "| Chatbot
+    Chatbot    -->|" prompt + contexto "| LLM
+    LLM        -->|" resposta "| Chatbot
+    Chatbot    -->|" resposta "| Main
+    Main       -->|" exibe "| User
 ```
+
+## Legenda de Cores
+
+| Cor | Camada |
+| --- | --- |
+| Azul | Usuário |
+| Verde | Aplicação (módulos Python) |
+| Laranja | Infraestrutura local (disco) |
+| Roxo | OpenAI API (nuvem) |
