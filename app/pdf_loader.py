@@ -27,6 +27,17 @@ def _processar_pdf(pdf: Path, splitter: RecursiveCharacterTextSplitter) -> list[
     return chunks_validos
 
 
+def validar_pdf(pdf: Path) -> str | None:
+    """Retorna None se válido, ou mensagem de erro se inválido."""
+    try:
+        paginas = PyPDFLoader(str(pdf)).load()
+    except Exception as exc:
+        return f"falha ao processar ({exc})"
+    if not any(p.page_content.strip() for p in paginas):
+        return "sem texto extraível (possível PDF de imagem sem OCR)"
+    return None
+
+
 def carregar_pdfs() -> list[Document]:
     pdfs = list(DATA_DIR.glob("*.pdf"))
     if not pdfs:

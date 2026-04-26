@@ -9,7 +9,7 @@ import streamlit as st
 
 from chatbot import Chatbot
 from embeddings import VECTOR_STORE_DIR
-from pdf_loader import DATA_DIR
+from pdf_loader import DATA_DIR, validar_pdf
 
 st.set_page_config(page_title="Chatbot RAG", page_icon="🤖", layout="centered")
 
@@ -47,6 +47,12 @@ with st.sidebar:
                 st.session_state.saved_files.add(nome_seguro)
                 continue
             (DATA_DIR / nome_seguro).write_bytes(conteudo)
+            erro = validar_pdf(DATA_DIR / nome_seguro)
+            if erro:
+                st.warning(f"⚠️ {nome_seguro}: {erro}. Arquivo removido.")
+                (DATA_DIR / nome_seguro).unlink(missing_ok=True)
+                st.session_state.saved_files.add(nome_seguro)
+                continue
             st.session_state.saved_files.add(nome_seguro)
             salvos += 1
 
@@ -57,6 +63,21 @@ with st.sidebar:
     st.divider()
 
     st.subheader("Documentos indexados")
+
+    if "validados" not in st.session_state:
+        st.session_state.validados = set()
+
+    pdfs = sorted(DATA_DIR.glob("*.pdf"))
+    for pdf in pdfs:
+        if pdf.name not in st.session_state.validados:
+            erro = validar_pdf(pdf)
+            if erro:
+                st.warning(f"⚠️ {pdf.name}: {erro}. Arquivo removido.")
+                pdf.unlink(missing_ok=True)
+                st.session_state.precisa_reindexar = True
+                continue
+            st.session_state.validados.add(pdf.name)
+
     pdfs = sorted(DATA_DIR.glob("*.pdf"))
     if pdfs:
         for pdf in pdfs:
