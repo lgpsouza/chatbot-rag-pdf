@@ -49,7 +49,7 @@ with st.sidebar:
             (DATA_DIR / nome_seguro).write_bytes(conteudo)
             erro = validar_pdf(DATA_DIR / nome_seguro)
             if erro:
-                st.warning(f"⚠️ {nome_seguro}: {erro}. Arquivo removido.")
+                st.warning(f"**{nome_seguro}** não pôde ser indexado ({erro}) e foi removido automaticamente.")
                 (DATA_DIR / nome_seguro).unlink(missing_ok=True)
                 st.session_state.saved_files.add(nome_seguro)
                 continue
@@ -72,7 +72,7 @@ with st.sidebar:
         if pdf.name not in st.session_state.validados:
             erro = validar_pdf(pdf)
             if erro:
-                st.warning(f"⚠️ {pdf.name}: {erro}. Arquivo removido.")
+                st.warning(f"**{pdf.name}** não pôde ser indexado ({erro}) e foi removido automaticamente.")
                 pdf.unlink(missing_ok=True)
                 st.session_state.precisa_reindexar = True
                 continue

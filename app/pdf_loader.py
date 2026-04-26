@@ -28,13 +28,13 @@ def _processar_pdf(pdf: Path, splitter: RecursiveCharacterTextSplitter) -> list[
 
 
 def validar_pdf(pdf: Path) -> str | None:
-    """Retorna None se válido, ou mensagem de erro se inválido."""
+    """Retorna None se válido, ou mensagem amigável se inválido."""
     try:
         paginas = PyPDFLoader(str(pdf)).load()
-    except Exception as exc:
-        return f"falha ao processar ({exc})"
+    except Exception:
+        return "PDF corrompido ou em formato não suportado"
     if not any(p.page_content.strip() for p in paginas):
-        return "sem texto extraível (possível PDF de imagem sem OCR)"
+        return "PDF sem texto selecionável — pode ser um scan sem OCR"
     return None
 
 
