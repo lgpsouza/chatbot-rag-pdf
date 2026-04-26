@@ -60,7 +60,11 @@ with st.sidebar:
 
     st.divider()
 
-    precisa_reindexar = st.session_state.get("precisa_reindexar", False)
+    # Destaca o botão quando há PDFs sem vectorstore (inclui refresh de página)
+    precisa_reindexar = (
+        st.session_state.get("precisa_reindexar", False)
+        or (bool(pdfs) and not vs_ok)
+    )
 
     if st.button(
         "🔄 Reindexar documentos",
