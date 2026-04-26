@@ -53,6 +53,37 @@ def test_pdf_scan_sem_texto_emite_aviso(tmp_path, monkeypatch):
     assert resultado == []
 
 
+def test_pdf_malformado_emite_aviso_e_continua(tmp_path, monkeypatch):
+    import pdf_loader
+    from langchain_core.documents import Document
+
+    pdf_ok = tmp_path / "valido.pdf"
+    pdf_ok.write_bytes(b"%PDF-1.4 fake")
+    pdf_mal = tmp_path / "corrompido.pdf"
+    pdf_mal.write_bytes(b"nao e um pdf")
+
+    monkeypatch.setattr(pdf_loader, "DATA_DIR", tmp_path)
+
+    chunk = Document(page_content="Conteúdo válido.", metadata={})
+
+    def loader_seletivo(path):
+        mock = MagicMock()
+        if "corrompido" in path:
+            mock.load.side_effect = Exception("PDF inválido")
+        else:
+            mock.load.return_value = [chunk]
+        return mock
+
+    with patch("pdf_loader.PyPDFLoader", side_effect=loader_seletivo), \
+         warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        resultado = pdf_loader.carregar_pdfs()
+        assert any("falha ao processar" in str(x.message) for x in w)
+
+    assert len(resultado) == 1
+    assert resultado[0].page_content == "Conteúdo válido."
+
+
 # ── chatbot ───────────────────────────────────────────────────────────────────
 
 def test_chatbot_sem_api_key(monkeypatch):
