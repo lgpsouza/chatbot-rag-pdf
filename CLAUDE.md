@@ -59,6 +59,8 @@ O `load_dotenv()` é chamado em `app/interface.py` e `app/main.py` antes de qual
 - **Reuso do vectorstore** — `embeddings.py` verifica se `vector_store/` já existe antes de reprocessar PDFs, evitando custo desnecessário com a API de embeddings
 - **Modelo explícito** — sempre usar `text-embedding-3-small` e `gpt-4o-mini` explicitamente; nunca depender do default da OpenAI
 - **Chunks vazios** — `pdf_loader.py` filtra chunks com apenas espaços e emite `warnings.warn()` (PDFs de imagem sem OCR não são suportados)
+- **Upload via sidebar** — `st.file_uploader` salva PDFs em `data/`; `st.session_state.saved_files` evita regravação a cada rerun do Streamlit
+- **Reindexação explícita** — botão "Reindexar documentos" apaga `vector_store/` com `shutil.rmtree`, limpa `@st.cache_resource` e chama `st.rerun()`; fica em destaque (`type="primary"`) quando há arquivos novos pendentes
 
 ## Padrões de código
 

@@ -52,11 +52,22 @@
 
 ---
 
+## Release 2.1 — Upload de PDFs (adicionado após v0.1)
+
+### Funcionalidades
+
+- [x] **RF10** — Upload de PDFs pela interface Streamlit
+  - Aceite: `st.file_uploader` aceita múltiplos PDFs e salva em `data/`; sessão rastreia arquivos já salvos para evitar duplicatas
+- [x] **RF11** — Botão "Reindexar documentos"
+  - Aceite: limpa `vector_store/` com `shutil.rmtree`, invalida `@st.cache_resource` e força reconstrução; botão fica em destaque quando há arquivos pendentes de indexação
+
+---
+
 ## Release 3 — Entrega Final (Documentação e Deployment)
 
 ### Funcionalidades
 
-- [ ] **RF09** — Histórico de conversa persistido entre sessões
+- [ ] **RF12** — Histórico de conversa persistido entre sessões
   - Aceite: perguntas e respostas anteriores são carregadas ao reiniciar a interface
 
 ### Técnico

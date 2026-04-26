@@ -36,6 +36,15 @@ Desenvolver um chatbot conversacional com interface web (Streamlit) capaz de res
 
 ---
 
+## Requisitos adicionados após v0.1
+
+| ID | Requisito |
+| --- | --- |
+| RF10 | O sistema deve permitir o upload de PDFs diretamente pela interface Streamlit, salvando-os em `data/` |
+| RF11 | O sistema deve disponibilizar um botão "Reindexar documentos" que reconstrói o vectorstore após novos uploads |
+
+---
+
 ## Fora de Escopo (v0.1)
 
 - API REST ou backend separado
@@ -44,7 +53,6 @@ Desenvolver um chatbot conversacional com interface web (Streamlit) capaz de res
 - Suporte a formatos além de PDF (DOCX, HTML, imagens)
 - OCR para PDFs baseados em imagem
 - Autenticação de usuários
-- Upload de PDFs via interface web
 - Deploy em nuvem ou containerização (Docker)
 - Monitoramento, logging estruturado e observabilidade
 
@@ -59,3 +67,5 @@ Desenvolver um chatbot conversacional com interface web (Streamlit) capaz de res
 - [x] PDFs sem texto exibem aviso em vez de falha silenciosa
 - [x] Ausência de `OPENAI_API_KEY` gera erro descritivo antes de qualquer chamada à API
 - [x] Todos os testes unitários passam sem chamadas reais à API OpenAI (15/15 passando)
+- [x] Usuário pode fazer upload de PDFs pela interface sem acesso manual ao sistema de arquivos
+- [x] Botão "Reindexar" reconstrói o vectorstore e reinicia o chatbot com os novos documentos

@@ -31,7 +31,10 @@ flowchart LR
         LLM["gpt-4o-mini"]:::api
     end
 
+    User       -->|" upload PDF "| UI
     User       -->|" pergunta "| UI
+    UI         -->|" salva arquivo "| PDF
+
     UI         --> Chatbot
     Chatbot    --> Embeddings
 
