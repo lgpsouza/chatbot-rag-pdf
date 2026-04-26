@@ -1,0 +1,60 @@
+# Escopo do MVP — Chatbot RAG com Processamento de PDFs
+
+## Objetivo
+
+Desenvolver um chatbot conversacional via linha de comando (CLI) capaz de responder perguntas em linguagem natural sobre o conteúdo de documentos PDF, utilizando Retrieval-Augmented Generation (RAG) com embeddings semânticos e modelos de linguagem da OpenAI.
+
+---
+
+## Requisitos Funcionais
+
+| ID | Requisito |
+|---|---|
+| RF01 | O sistema deve carregar documentos PDF a partir de um diretório local (`data/`) |
+| RF02 | O sistema deve segmentar os documentos em chunks de texto para indexação |
+| RF03 | O sistema deve gerar embeddings semânticos dos chunks e persistir em vectorstore local |
+| RF04 | O sistema deve reutilizar o vectorstore já existente sem reprocessar os PDFs |
+| RF05 | O sistema deve receber perguntas em linguagem natural via terminal |
+| RF06 | O sistema deve recuperar os chunks mais relevantes para a pergunta recebida |
+| RF07 | O sistema deve gerar respostas fundamentadas nos chunks recuperados |
+| RF08 | O sistema deve alertar quando um PDF não contiver texto extraível (scan sem OCR) |
+| RF09 | O sistema deve encerrar a sessão quando o usuário digitar "sair" |
+
+---
+
+## Requisitos Não Funcionais
+
+| ID | Requisito |
+|---|---|
+| RNF01 | A chave de API (`OPENAI_API_KEY`) deve ser carregada via arquivo `.env`, nunca exposta no código |
+| RNF02 | Erros da API OpenAI (`RateLimitError`, `APIError`) devem ser tratados e exibidos ao usuário sem encerrar o processo |
+| RNF03 | O modelo de linguagem utilizado deve ser `gpt-4o-mini` e o modelo de embeddings `text-embedding-3-small`, ambos declarados explicitamente |
+| RNF04 | O vectorstore deve ser persistido localmente em `vector_store/` e ignorado pelo controle de versão |
+| RNF05 | As chamadas à API devem ter timeout máximo de 30 segundos e até 2 tentativas automáticas |
+| RNF06 | O ambiente de execução deve ser Python 3.11+ com dependências isoladas em `.venv` |
+| RNF07 | Todos os módulos da aplicação devem possuir testes unitários com mocks, sem chamadas reais à API |
+
+---
+
+## Fora de Escopo (v0.1)
+
+- Interface web, API REST ou qualquer frontend gráfico
+- Histórico de conversa e memória de contexto entre perguntas
+- Reranking ou re-scoring dos chunks recuperados
+- Suporte a formatos além de PDF (DOCX, HTML, imagens)
+- OCR para PDFs baseados em imagem
+- Autenticação de usuários
+- Upload de arquivos via interface
+- Deploy em nuvem ou containerização (Docker)
+- Monitoramento, logging estruturado e observabilidade
+
+---
+
+## Critérios de Aceite do MVP
+
+- [ ] O chatbot responde perguntas sobre o conteúdo de ao menos um PDF válido
+- [ ] O vectorstore é reutilizado entre execuções sem reprocessar os PDFs
+- [ ] Perguntas sem resposta nos documentos retornam mensagem informativa, não alucinação silenciosa
+- [ ] PDFs sem texto exibem aviso em vez de falha silenciosa
+- [ ] Ausência de `OPENAI_API_KEY` gera erro descritivo antes de qualquer chamada à API
+- [ ] Todos os testes unitários passam sem chamadas reais à API OpenAI
