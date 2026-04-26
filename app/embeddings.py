@@ -11,19 +11,29 @@ from pdf_loader import carregar_pdfs
 VECTOR_STORE_DIR = Path(__file__).parent.parent / "vector_store"
 
 
+def _vs_populado() -> bool:
+    return VECTOR_STORE_DIR.exists() and any(VECTOR_STORE_DIR.iterdir())
+
+
+def _verificar_permissao(path: Path) -> None:
+    if not os.access(path, os.W_OK):
+        raise PermissionError(
+            f"Sem permissão de escrita em {path}. "
+            "Verifique as permissões do diretório."
+        )
+
+
 def construir_vectorstore(documentos: list[Document] | None = None) -> Chroma:
     embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 
-    vs_existe = VECTOR_STORE_DIR.exists()
-    vs_populado = vs_existe and any(VECTOR_STORE_DIR.iterdir())
-
-    if vs_populado:
+    if _vs_populado():
         return Chroma(
             persist_directory=str(VECTOR_STORE_DIR),
             embedding_function=embeddings,
         )
 
-    if vs_existe and not vs_populado:
+    vs_existe = VECTOR_STORE_DIR.exists()
+    if vs_existe:
         warnings.warn(
             "vector_store/ existe mas está vazio. "
             "PDFs serão reprocessados e novos embeddings serão gerados."
@@ -37,12 +47,7 @@ def construir_vectorstore(documentos: list[Document] | None = None) -> Chroma:
             "Nenhum documento encontrado. Adicione arquivos PDF na pasta data/."
         )
 
-    target_dir = VECTOR_STORE_DIR if vs_existe else VECTOR_STORE_DIR.parent
-    if not os.access(target_dir, os.W_OK):
-        raise PermissionError(
-            f"Sem permissão de escrita em {target_dir}. "
-            "Verifique as permissões do diretório."
-        )
+    _verificar_permissao(VECTOR_STORE_DIR if vs_existe else VECTOR_STORE_DIR.parent)
 
     warnings.warn(
         f"Gerando embeddings para {len(documentos)} chunk(s). "

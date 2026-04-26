@@ -27,6 +27,15 @@ def _format_docs(docs: Sequence[Document]) -> str:
     return "\n\n".join(d.page_content for d in docs)
 
 
+def _build_chain(vectorstore: Chroma, llm: ChatOpenAI):
+    return (
+        {"context": vectorstore.as_retriever() | _format_docs, "question": RunnablePassthrough()}
+        | _PROMPT
+        | llm
+        | StrOutputParser()
+    )
+
+
 class Chatbot:
     def __init__(self, vectorstore: Chroma | None = None):
         if not os.getenv("OPENAI_API_KEY"):
@@ -35,13 +44,9 @@ class Chatbot:
         if vectorstore is None:
             vectorstore = construir_vectorstore()
 
-        llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, timeout=30, max_retries=2)
-
-        self.chain = (
-            {"context": vectorstore.as_retriever() | _format_docs, "question": RunnablePassthrough()}
-            | _PROMPT
-            | llm
-            | StrOutputParser()
+        self.chain = _build_chain(
+            vectorstore,
+            ChatOpenAI(model="gpt-4o-mini", temperature=0, timeout=30, max_retries=2),
         )
 
     def perguntar(self, pergunta: str) -> str:
