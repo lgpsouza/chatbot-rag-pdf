@@ -1,4 +1,5 @@
 import shutil
+from pathlib import Path
 
 from dotenv import load_dotenv
 
@@ -33,11 +34,12 @@ with st.sidebar:
 
         novos = [
             f for f in uploaded_files
-            if f.name not in st.session_state.saved_files
+            if Path(f.name).name not in st.session_state.saved_files
         ]
         for f in novos:
-            (DATA_DIR / f.name).write_bytes(f.getvalue())
-            st.session_state.saved_files.add(f.name)
+            nome_seguro = Path(f.name).name
+            (DATA_DIR / nome_seguro).write_bytes(f.getvalue())
+            st.session_state.saved_files.add(nome_seguro)
 
         if novos:
             st.session_state.precisa_reindexar = True
