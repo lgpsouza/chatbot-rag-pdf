@@ -7,7 +7,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_openai import ChatOpenAI
-from openai import APIError, RateLimitError
+from openai import APIError, APITimeoutError, RateLimitError
 
 from embeddings import construir_vectorstore
 
@@ -51,6 +51,8 @@ class Chatbot:
             return f"Pergunta muito longa. Limite de {MAX_PERGUNTA_CHARS} caracteres."
         try:
             return self.chain.invoke(pergunta)
+        except APITimeoutError:
+            return "Tempo limite excedido. Tente novamente em instantes."
         except RateLimitError:
             return "Limite de requisições atingido. Aguarde alguns segundos e tente novamente."
         except APIError as e:

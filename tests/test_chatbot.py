@@ -5,7 +5,7 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
-from openai import APIError, RateLimitError
+from openai import APIError, APITimeoutError, RateLimitError
 
 
 # ── pdf_loader ────────────────────────────────────────────────────────────────
@@ -218,3 +218,10 @@ def test_api_error_retorna_mensagem_amigavel(monkeypatch):
     )
     resposta = bot.perguntar("Pergunta qualquer")
     assert "Erro na API OpenAI" in resposta
+
+
+def test_timeout_retorna_mensagem_amigavel(monkeypatch):
+    bot = _make_bot(monkeypatch)
+    bot.chain.invoke.side_effect = APITimeoutError(request=MagicMock())
+    resposta = bot.perguntar("Pergunta qualquer")
+    assert "Tempo limite" in resposta
