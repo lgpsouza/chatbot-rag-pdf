@@ -1,12 +1,12 @@
-# Padrão de Escrita de Prompts COSTAR - Chatbot RAG com Processamento de PDFs
+# Padrão de Escrita de Prompts COSTAR — Chatbot RAG com Processamento de PDFs
 
-Este documento apresenta exemplos de prompts extraídos e estruturados utilizando o framework **COSTAR** (Context, Objective, Style, Tone, Audience, Response) para um **Chatbot de Perguntas e Respostas com Retrieval-Augmented Generation (RAG)** que processa documentos PDF. O framework COSTAR é uma metodologia eficaz para criar prompts claros e precisos para modelos de linguagem.
+Este documento apresenta exemplos de prompts estruturados com o framework **COSTAR** (Context, Objective, Style, Tone, Audience, Response) para um **Chatbot RAG** que processa documentos PDF com interface web Streamlit, LangChain e OpenAI.
 
 ---
 
-# Seção 1: Estrutura Inicial e Planejamento
+## Seção 1: Estrutura Inicial e Planejamento
 
-## Prompt 1 - .gitignore
+### Prompt 1 — .gitignore
 
 **Contexto (Context):** Estou iniciando um Chatbot RAG em Python com LangChain, OpenAI API e processamento de PDFs em um repositório de produto.
 **Objetivo (Objective):** Gere um arquivo .gitignore para Python, ambiente virtual, cache de embeddings, arquivos PDF locais, arquivos .env e configurações de editor.
@@ -17,10 +17,10 @@ Este documento apresenta exemplos de prompts extraídos e estruturados utilizand
 
 ---
 
-## Prompt 2 - README inicial
+### Prompt 2 — README inicial
 
-**Contexto (Context):** MVP de Chatbot conversacional com RAG para responder perguntas baseado em documentos PDF com embeddings semânticos.
-**Objetivo (Objective):** Escrever um README inicial com objetivo, stack tecnológico, como rodar localmente, exemplos de uso e roadmap de releases.
+**Contexto (Context):** MVP de Chatbot conversacional com RAG para responder perguntas baseado em documentos PDF com embeddings semânticos e interface web Streamlit.
+**Objetivo (Objective):** Escrever um README inicial com objetivo, stack tecnológico, como rodar localmente (`streamlit run app/interface.py`), exemplos de uso e roadmap de releases.
 **Estilo (Style):** Markdown simples, direto e profissional.
 **Tom (Tone):** Direto e profissional. *(Inferido do Estilo)*
 **Público (Audience):** Desenvolvedores e usuários do chatbot. *(Inferido)*
@@ -28,13 +28,16 @@ Este documento apresenta exemplos de prompts extraídos e estruturados utilizand
 
 ---
 
-## Prompt 3 - Revisão crítica
+### Prompt 3 — Revisão crítica
 
-**Contexto (Context):** Analise o codigo gerado para app/main.py e responda:
-**Objetivo (Objective):** 
-1) Quais riscos tecnicos existem na integracao com OpenAI?
-2) O que pode quebrar em producao com PDFs grandes?
-3) Quais testes minimos devo criar agora?
+**Contexto (Context):** Analise o codigo gerado para app/interface.py (Streamlit) e responda:
+
+**Objetivo (Objective):**
+
+1. Quais riscos tecnicos existem na integracao com OpenAI?
+2. O que pode quebrar em producao com PDFs grandes?
+3. Quais testes minimos devo criar agora?
+
 **Estilo (Style):** Resposta curta em checklist.
 **Tom (Tone):** Analítico e crítico. *(Inferido)*
 **Público (Audience):** Desenvolvedor do código. *(Inferido)*
@@ -42,9 +45,9 @@ Este documento apresenta exemplos de prompts extraídos e estruturados utilizand
 
 ---
 
-## Prompt 4 - Mensagem de commit
+### Prompt 4 — Mensagem de commit
 
-**Contexto (Context):** Adicionei estrutura inicial, README, .gitignore e endpoint /health.
+**Contexto (Context):** Adicionei estrutura inicial, README, .gitignore e interface Streamlit.
 **Objetivo (Objective):** Gerar uma mensagem de commit no padrao Conventional Commits.
 **Estilo (Style):** Padrão Conventional Commits. *(Inferido do Objetivo)*
 **Tom (Tone):** Técnico e padronizado. *(Inferido)*
@@ -53,13 +56,16 @@ Este documento apresenta exemplos de prompts extraídos e estruturados utilizand
 
 ---
 
-## Prompt 5 - Revisão de planejamento
+### Prompt 5 — Revisão de planejamento
 
 **Contexto (Context):** Analise este escopo e backlog e responda:
-**Objetivo (Objective):** 
-1) O que está grande demais para a release inicial?
-2) O que está faltando para testabilidade?
-3) Quais 3 riscos técnicos devo mitigar antes da implementação?
+
+**Objetivo (Objective):**
+
+1. O que está grande demais para a release inicial?
+2. O que está faltando para testabilidade?
+3. Quais 3 riscos técnicos devo mitigar antes da implementação?
+
 **Estilo (Style):** Resposta em bullets curtos.
 **Tom (Tone):** Analítico e crítico. *(Inferido)*
 **Público (Audience):** Líder técnico e product owner. *(Inferido)*
@@ -67,17 +73,13 @@ Este documento apresenta exemplos de prompts extraídos e estruturados utilizand
 
 ---
 
-*Nota: Os campos "Tone" e "Audience" foram inferidos em alguns casos para completar a estrutura COSTAR, pois não estavam explicitamente definidos.*
-
----
-
-# Seção 2: Ideação, Arquitetura Mínima e Git/GitHub para o Projeto
+## Seção 2: Ideação, Arquitetura Mínima e Git/GitHub para o Projeto
 
 Esta seção abrange os prompts essenciais para a fase de planejamento e arquitetura de um projeto MVP de Chatbot RAG, incluindo definição de escopo, organização de releases, diagramas arquiteturais e versionamento.
 
-## Prompt 1 - Escopo MVP
+### Prompt 1 — Escopo MVP
 
-**Contexto (Context):** MVP de Chatbot RAG para responder perguntas baseado em documentos PDF com embeddings semânticos.
+**Contexto (Context):** MVP de Chatbot RAG com interface web Streamlit para responder perguntas baseado em documentos PDF com embeddings semânticos.
 **Objetivo (Objective):** Gerar documento de escopo com objetivo, requisitos funcionais, não funcionais e fora de escopo.
 **Estilo (Style):** Linguagem técnica, direta, em Markdown.
 **Tom (Tone):** Formal e técnico. *(Inferido do Estilo)*
@@ -86,9 +88,9 @@ Esta seção abrange os prompts essenciais para a fase de planejamento e arquite
 
 ---
 
-## Prompt 2 - Backlog por releases
+### Prompt 2 — Backlog por releases
 
-**Contexto (Context):** O produto será entregue em 3 releases: core (upload e busca), qualidade (testes e otimizações) e entrega final (documentação e deployment).
+**Contexto (Context):** O produto será entregue em 3 releases: core (carregamento de PDFs, busca semântica e interface Streamlit), qualidade (testes e otimizações) e entrega final (documentação e deployment).
 **Objetivo (Objective):** Criar backlog mínimo com IDs RF/RT e critérios de aceite.
 **Estilo (Style):** Checklist Markdown.
 **Tom (Tone):** Estruturado e objetivo. *(Inferido)*
@@ -97,18 +99,18 @@ Esta seção abrange os prompts essenciais para a fase de planejamento e arquite
 
 ---
 
-## Prompt 3 - Arquitetura Mermaid
+### Prompt 3 — Arquitetura Mermaid
 
-**Contexto (Context):** Chatbot com camadas API, Service, DocumentProcessor, VectorStore e componente RAG que integra LangChain com OpenAI.
-**Objetivo (Objective):** Gerar diagrama Mermaid de componentes e fluxo de dados.
-**Estilo (Style):** Simples, legível e versionável.
+**Contexto (Context):** Chatbot com camadas Streamlit UI, Chatbot/RAG Chain, VectorStore Builder, Document Processor e OpenAI API.
+**Objetivo (Objective):** Gerar diagrama Mermaid de componentes e fluxo de dados com cores por camada e layout LR.
+**Estilo (Style):** Simples, legível, com cores e versionável.
 **Tom (Tone):** Técnico e visual. *(Inferido)*
 **Público (Audience):** Arquitetos e desenvolvedores. *(Inferido)*
 **Resposta (Response):** Apenas bloco Mermaid.
 
 ---
 
-## Prompt 4 - Conventional Commits
+### Prompt 4 — Conventional Commits
 
 **Contexto (Context):** Adicionei docs/escopo-mvp.md, docs/arquitetura.md e docs/backlog.md.
 **Objetivo (Objective):** Sugerir 3 mensagens de commit no padrão Conventional Commits.
@@ -119,13 +121,16 @@ Esta seção abrange os prompts essenciais para a fase de planejamento e arquite
 
 ---
 
-## Prompt 5 - Revisão de planejamento
+### Prompt 5 — Revisão de escopo e backlog
 
 **Contexto (Context):** Analise este escopo e backlog e responda:
-**Objetivo (Objective):** 
-1) O que está grande demais para a release inicial?
-2) O que está faltando para testabilidade?
-3) Quais 3 riscos técnicos devo mitigar antes da implementação?
+
+**Objetivo (Objective):**
+
+1. O que está grande demais para a release inicial?
+2. O que está faltando para testabilidade?
+3. Quais 3 riscos técnicos devo mitigar antes da implementação?
+
 **Estilo (Style):** Resposta em bullets curtos.
 **Tom (Tone):** Analítico e crítico. *(Inferido)*
 **Público (Audience):** Líder técnico e product owner. *(Inferido)*
@@ -133,72 +138,64 @@ Esta seção abrange os prompts essenciais para a fase de planejamento e arquite
 
 ---
 
-# Seção 3: Implementação Guiada - Núcleo da Aplicação
+## Seção 3: Implementação Guiada — Núcleo da Aplicação
 
-Esta seção abrange os prompts essenciais para implementar o núcleo do Chatbot RAG, desde modelos de dados até componentes de processamento de PDFs e busca semântica.
+Esta seção abrange os prompts essenciais para implementar o núcleo do Chatbot RAG: interface Streamlit, processamento de PDFs, vectorstore e chain RAG.
 
-## Prompt 1 - Modelos Pydantic
+### Prompt 1 — Interface Streamlit
 
-**Contexto (Context):** Chatbot RAG em FastAPI para processamento de documentos e respostas conversacionais.
-**Objetivo (Objective):** Gerar modelos DocumentUpload, ChatMessage, ChatResponse e SearchResult com tipagem e validacoes.
-**Estilo (Style):** Pydantic v2, codigo limpo e docstrings curtas.
-**Tom (Tone):** Técnico e preciso. *(Inferido)*
+**Contexto (Context):** Chatbot RAG em Python com LangChain, ChromaDB e OpenAI. A interface deve ser web, usando Streamlit.
+**Objetivo (Objective):** Criar app/interface.py com chat UI, histórico de sessão via `st.session_state`, spinner de loading, tratamento de erros de API e `@st.cache_resource` no carregamento do chatbot.
+**Estilo (Style):** Python tipado, código limpo, sem lógica de negócio na interface.
+**Tom (Tone):** Técnico e pragmático. *(Inferido)*
 **Público (Audience):** Desenvolvedores Python. *(Inferido)*
-**Resposta (Response):** Apenas codigo de app/models/schemas.py.
+**Resposta (Response):** Código completo de app/interface.py.
 
 ---
 
-## Prompt 2 - DocumentProcessor
+### Prompt 2 — DocumentProcessor
 
 **Contexto (Context):** Preciso processar PDFs, extrair texto e gerar embeddings para a primeira release.
-**Objetivo (Objective):** Criar DocumentProcessor que carregue PDFs, extraia texto, divida em chunks e gere embeddings usando OpenAI.
-**Estilo (Style):** Python tipado, com tratamento de erros para PDFs malformados.
+**Objetivo (Objective):** Criar pdf_loader.py que carregue PDFs, extraia texto, divida em chunks e filtre chunks vazios com warnings.
+**Estilo (Style):** Python tipado, com tratamento de erros para PDFs malformados e PDFs de imagem sem OCR.
 **Tom (Tone):** Robusto e pragmático. *(Inferido)*
 **Público (Audience):** Desenvolvedores Python. *(Inferido)*
-**Resposta (Response):** Codigo completo de app/services/document_processor.py.
+**Resposta (Response):** Codigo completo de app/pdf_loader.py.
 
 ---
 
-## Prompt 3 - VectorStore com LangChain
+### Prompt 3 — VectorStore com LangChain
 
-**Contexto (Context):** Preciso armazenar embeddings e fazer busca semântica eficiente.
-**Objetivo (Objective):** Criar wrapper de VectorStore usando LangChain com suporte a busca por similaridade e filtros.
-**Estilo (Style):** Separar abstração de storage da implementação específica.
-**Tom (Tone):** Orientado a arquitetura. *(Inferido)*
+**Contexto (Context):** Preciso armazenar embeddings e fazer busca semântica eficiente com reutilização entre execuções.
+**Objetivo (Objective):** Criar embeddings.py usando LangChain + ChromaDB com verificação de vectorstore existente antes de reprocessar PDFs.
+**Estilo (Style):** Verificar existência antes de criar; modelo `text-embedding-3-small` explícito.
+**Tom (Tone):** Orientado a custo e performance. *(Inferido)*
 **Público (Audience):** Arquitetos e desenvolvedores. *(Inferido)*
-**Resposta (Response):** Codigo de app/services/vector_store.py.
+**Resposta (Response):** Codigo de app/embeddings.py.
 
 ---
 
-## Prompt 4 - RAG Chain com LangChain
+### Prompt 4 — RAG Chain com LangChain
 
-**Contexto (Context):** Quero integrar LangChain com OpenAI para criar uma chain que recupera documentos relevantes e gera respostas.
-**Objetivo (Objective):** Implementar RAGChain que combine VectorStore, LLM e prompt engineering com fallback seguro.
-**Estilo (Style):** Falha segura, timeout e tratamento de contexto vazio.
+**Contexto (Context):** Quero integrar LangChain com OpenAI para criar uma chain RAG que recupera documentos relevantes e gera respostas.
+**Objetivo (Objective):** Implementar chatbot.py usando LCEL com RunnablePassthrough, ChatPromptTemplate e StrOutputParser, com tratamento de RateLimitError e APIError.
+**Estilo (Style):** Falha segura, timeout configurado, sem depender de defaults da OpenAI.
 **Tom (Tone):** Robusto e confiável. *(Inferido)*
 **Público (Audience):** Desenvolvedores e DevOps. *(Inferido)*
-**Resposta (Response):** Codigo de app/services/rag_chain.py.
+**Resposta (Response):** Codigo de app/chatbot.py.
 
 ---
 
-## Prompt 5 - Rotas da API
+### Prompt 5 — Revisão técnica
 
-**Contexto (Context):** FastAPI com DocumentProcessor e RAGChain prontos.
-**Objetivo (Objective):** Criar rotas POST para upload de PDFs, POST para chat e GET para histórico com status HTTP corretos.
-**Estilo (Style):** Router separado em app/api/chat_routes.py.
-**Tom (Tone):** RESTful e bem estruturado. *(Inferido)*
-**Público (Audience):** Desenvolvedores e consumidores da API. *(Inferido)*
-**Resposta (Response):** Apenas o codigo do arquivo.
+**Contexto (Context):** Revise os arquivos do core do Chatbot (interface.py, chatbot.py, embeddings.py, pdf_loader.py) e responda:
 
----
+**Objetivo (Objective):**
 
-## Prompt 6 - Revisão técnica
+1. Quais pontos de acoplamento estao altos?
+2. Onde faltam validacoes de entrada?
+3. Quais 5 testes devo priorizar na proxima release?
 
-**Contexto (Context):** Revise os arquivos do core do Chatbot e responda:
-**Objetivo (Objective):** 
-1) Quais pontos de acoplamento estao altos?
-2) Onde faltam validacoes de entrada?
-3) Quais 5 testes devo priorizar na proxima release?
 **Estilo (Style):** Resposta em checklist.
 **Tom (Tone):** Analítico e crítico. *(Inferido)*
 **Público (Audience):** Líder técnico e desenvolvedores. *(Inferido)*
@@ -206,46 +203,35 @@ Esta seção abrange os prompts essenciais para implementar o núcleo do Chatbot
 
 ---
 
-# Seção 4: Implementação Guiada - Testes, Refatoração e Documentação
+## Seção 4: Implementação Guiada — Testes, Refatoração e Documentação
 
-Esta seção abrange os prompts essenciais para garantir qualidade através de testes abrangentes, refatoração alinhada a princípios SOLID e documentação completa.
+Esta seção abrange os prompts essenciais para garantir qualidade através de testes, refatoração e documentação completa.
 
-## Prompt 1 - Testes do DocumentProcessor
+### Prompt 1 — Testes do pdf_loader
 
-**Contexto (Context):** Tenho DocumentProcessor que carrega PDFs e gera embeddings.
-**Objetivo (Objective):** Gerar suite Pytest cobrindo carregamento de PDF valido, PDF malformado, texto vazio e timeout de API.
-**Estilo (Style):** Testes claros, nomes descritivos e fixtures simples.
+**Contexto (Context):** Tenho pdf_loader.py que carrega PDFs, faz chunking e filtra chunks vazios.
+**Objetivo (Objective):** Gerar suite Pytest cobrindo: diretório vazio, PDF válido com chunks, PDF de imagem sem texto (warning) e timeout de API.
+**Estilo (Style):** Testes claros, nomes descritivos, sem chamadas reais à API OpenAI.
 **Tom (Tone):** Técnico e preciso. *(Inferido)*
 **Público (Audience):** Desenvolvedores Python. *(Inferido)*
-**Resposta (Response):** Codigo completo de tests/test_document_processor.py.
+**Resposta (Response):** Codigo completo de tests/test_chatbot.py.
 
 ---
 
-## Prompt 2 - Testes do RAGChain
+### Prompt 2 — Testes do chatbot/RAG Chain
 
-**Contexto (Context):** RAGChain integra VectorStore e LLM com fallback quando API falha.
-**Objetivo (Objective):** Gerar testes para busca com resultados, busca sem resultados, timeout e fallback.
-**Estilo (Style):** Usar monkeypatch para mockar chamadas a OpenAI.
+**Contexto (Context):** chatbot.py integra VectorStore e LLM via LCEL com fallback quando API falha.
+**Objetivo (Objective):** Gerar testes para: ausência de API key, resposta válida com mock da chain, RateLimitError e APIError.
+**Estilo (Style):** Usar monkeypatch e MagicMock para mockar chamadas a OpenAI.
 **Tom (Tone):** Técnico e robusto. *(Inferido)*
 **Público (Audience):** Desenvolvedores Python. *(Inferido)*
-**Resposta (Response):** Codigo de tests/test_rag_chain.py.
+**Resposta (Response):** Codigo de tests/test_chatbot.py.
 
 ---
 
-## Prompt 3 - Testes de API
+### Prompt 3 — Refatoração DRY/SRP
 
-**Contexto (Context):** API FastAPI com endpoints para upload de PDF e chat.
-**Objetivo (Objective):** Criar testes de rota com TestClient para upload 201, chat 200, arquivo invalido 400 e recurso nao encontrado 404.
-**Estilo (Style):** Isolar dependencia de VectorStore para evitar estado global entre testes.
-**Tom (Tone):** RESTful e isolado. *(Inferido)*
-**Público (Audience):** Desenvolvedores e QA. *(Inferido)*
-**Resposta (Response):** Codigo de tests/test_chat_routes.py.
-
----
-
-## Prompt 4 - Refatoração DRY/SRP
-
-**Contexto (Context):** Analise os arquivos app/services/document_processor.py, app/services/vector_store.py e app/services/rag_chain.py.
+**Contexto (Context):** Analise os arquivos app/chatbot.py, app/embeddings.py e app/pdf_loader.py.
 **Objetivo (Objective):** Sugerir refatoracao com foco em DRY e SRP sem mudar comportamento externo.
 **Estilo (Style):** Resposta com 1) lista de mudancas propostas 2) patch sugerido por arquivo.
 **Tom (Tone):** Analítico e arquitetural. *(Inferido)*
@@ -254,10 +240,10 @@ Esta seção abrange os prompts essenciais para garantir qualidade através de t
 
 ---
 
-## Prompt 5 - README final técnico
+### Prompt 4 — README final técnico
 
-**Contexto (Context):** MVP de Chatbot RAG com processamento de PDFs e busca semântica assistida por IA.
-**Objetivo (Objective):** Gerar README completo com instalacao, execucao, testes, arquitetura, uso da API, limitacoes e proximos passos.
+**Contexto (Context):** MVP de Chatbot RAG com processamento de PDFs, busca semântica e interface web Streamlit.
+**Objetivo (Objective):** Gerar README completo com instalacao, execucao via `streamlit run app/interface.py`, testes, arquitetura, exemplos de uso, limitacoes e proximos passos.
 **Estilo (Style):** Markdown profissional e objetivo.
 **Tom (Tone):** Técnico e informativo. *(Inferido)*
 **Público (Audience):** Desenvolvedores e usuários do chatbot. *(Inferido)*
@@ -265,13 +251,16 @@ Esta seção abrange os prompts essenciais para garantir qualidade através de t
 
 ---
 
-## Prompt 6 - Revisao final de qualidade
+### Prompt 5 — Revisao final de qualidade
 
 **Contexto (Context):** Com base no codigo e nos testes atuais, gere um checklist com:
-**Objetivo (Objective):** 
+
+**Objetivo (Objective):**
+
 - Riscos tecnicos restantes
 - Gaps de cobertura de teste
 - Melhorias prioritarias para a proxima release
+
 **Estilo (Style):** Resposta em bullets curtos.
 **Tom (Tone):** Analítico e crítico. *(Inferido)*
 **Público (Audience):** Líder técnico e product owner. *(Inferido)*
@@ -279,14 +268,14 @@ Esta seção abrange os prompts essenciais para garantir qualidade através de t
 
 ---
 
-# Seção 5: Empacotamento, README Final, Demonstração e Submissão
+## Seção 5: Empacotamento, README Final, Demonstração e Submissão
 
 Esta seção abrange os prompts finais para empacotar o projeto, criar documentação definitiva, preparar demonstração técnica e submeter a solução.
 
-## Prompt 1 - Makefile
+### Prompt 1 — Makefile
 
-**Contexto (Context):** Projeto FastAPI com Chatbot RAG, comandos de instalar dependencias, executar API e rodar testes.
-**Objetivo (Objective):** Gerar Makefile com targets install, run e test.
+**Contexto (Context):** Projeto Python com Chatbot RAG e interface Streamlit, comandos de instalar dependencias, executar interface e rodar testes.
+**Objetivo (Objective):** Gerar Makefile com targets: `install`, `run` (streamlit run app/interface.py) e `test`.
 **Estilo (Style):** Simples e portavel.
 **Tom (Tone):** Prático e direto. *(Inferido)*
 **Público (Audience):** Desenvolvedores e DevOps. *(Inferido)*
@@ -294,10 +283,10 @@ Esta seção abrange os prompts finais para empacotar o projeto, criar documenta
 
 ---
 
-## Prompt 2 - .env.example
+### Prompt 2 — .env.example
 
-**Contexto (Context):** O projeto usa integracao com OpenAI API e armazenamento de embeddings.
-**Objetivo (Objective):** Criar arquivo .env.example com variaveis necessarias (OPENAI_API_KEY, VECTOR_STORE_PATH, etc.) e valores placeholder seguros.
+**Contexto (Context):** O projeto usa integracao com OpenAI API e armazenamento de embeddings no ChromaDB local.
+**Objetivo (Objective):** Criar arquivo .env.example com variaveis necessarias (OPENAI_API_KEY) e valores placeholder seguros.
 **Estilo (Style):** Minimalista.
 **Tom (Tone):** Seguro e informativo. *(Inferido)*
 **Público (Audience):** Desenvolvedores e DevOps. *(Inferido)*
@@ -305,13 +294,16 @@ Esta seção abrange os prompts finais para empacotar o projeto, criar documenta
 
 ---
 
-## Prompt 3 - Revisao de README
+### Prompt 3 — Revisao de README
 
 **Contexto (Context):** Analise meu README e responda:
-**Objetivo (Objective):** 
-1) O que falta para ser reproduzivel em maquina limpa?
-2) Quais secoes estao fracas para onboarding tecnico?
-3) Como melhorar a secao de uso do RAG e processamento de PDFs?
+
+**Objetivo (Objective):**
+
+1. O que falta para ser reproduzivel em maquina limpa?
+2. Quais secoes estao fracas para onboarding tecnico?
+3. Como melhorar a secao de uso da interface Streamlit e processamento de PDFs?
+
 **Estilo (Style):** Resposta em checklist objetivo.
 **Tom (Tone):** Crítico e construtivo. *(Inferido)*
 **Público (Audience):** Líder técnico e product owner. *(Inferido)*
@@ -319,7 +311,7 @@ Esta seção abrange os prompts finais para empacotar o projeto, criar documenta
 
 ---
 
-## Prompt 4 - Checklist de release
+### Prompt 4 — Checklist de release
 
 **Contexto (Context):** Vou publicar a versao v1.0.0 no GitHub.
 **Objetivo (Objective):** Gerar checklist final com itens tecnicos e de documentacao para release.
@@ -330,11 +322,15 @@ Esta seção abrange os prompts finais para empacotar o projeto, criar documenta
 
 ---
 
-## Prompt 5 - Script de demo técnica
+### Prompt 5 — Script de demo técnica
 
 **Contexto (Context):** Preciso apresentar o Chatbot RAG em 5 minutos para stakeholders tecnicos.
-**Objetivo (Objective):** Criar roteiro com tempos por bloco e comandos para mostrar upload de PDF, busca e resposta no terminal.
+**Objetivo (Objective):** Criar roteiro com tempos por bloco e comandos para mostrar: inicialização da interface Streamlit (`streamlit run app/interface.py`), carregamento dos PDFs, pergunta no chat e exibição da resposta no browser.
 **Estilo (Style):** Direto, sem marketing.
 **Tom (Tone):** Técnico e objetivo. *(Inferido)*
 **Público (Audience):** Stakeholders técnicos. *(Inferido)*
 **Resposta (Response):** Roteiro em Markdown.
+
+---
+
+*Nota: Os campos "Tone" e "Audience" foram inferidos em alguns casos para completar a estrutura COSTAR, pois não estavam explicitamente definidos.*
