@@ -1,3 +1,4 @@
+
 # CLAUDE.md — Chatbot RAG com Processamento de PDFs
 
 ## Visão geral
