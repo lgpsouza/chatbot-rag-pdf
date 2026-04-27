@@ -15,6 +15,8 @@
 
 ## 2. O que pode quebrar em produção com PDFs grandes
 
+- [x] PDF corrompido ou sem texto selecionável aceito silenciosamente — usuário indexa arquivo inútil sem aviso
+  _Resolvido: `validar_pdf()` em `pdf_loader.py` rejeita o arquivo antes de salvar no vectorstore; aviso amigável exibido na interface._
 - [ ] `loader.load()` carrega o PDF inteiro em memória antes do split — PDFs de centenas de páginas causam pico de RAM
   _Em aberto: streaming de PDF não está no escopo do v0.1._
 - [x] `construir_vectorstore()` regera **todos** os embeddings a cada inicialização — custo alto e lentidão ao reiniciar
@@ -23,6 +25,8 @@
   _Resolvido: `construir_vectorstore()` lança `ValueError` quando a lista de documentos é vazia; instrução anti-alucinação adicionada ao prompt._
 - [x] PDFs com texto em imagem (scan) retornam chunks vazios sem aviso — `PyPDFLoader` não faz OCR
   _Resolvido: `pdf_loader.py` filtra chunks vazios e emite `warnings.warn()` com contagem._
+- [x] `shutil.rmtree` no rebuild do vectorstore causa `SQLITE_READONLY_DBMOVED` — o singleton do ChromaDB reutiliza conexões por `persist_directory`; deletar o arquivo SQLite enquanto a conexão está aberta muda o inode e o SQLite recusa novas escritas
+  _Resolvido: rebuild usa `delete_collection()` para limpar dados in-place sem deletar o arquivo, seguido de `from_documents()`. O manifest é apagado via `invalidar_vectorstore()` para disparar o rebuild._
 - [ ] `chunk_size=1000` fixo — PDFs com tabelas ou layouts complexos podem gerar chunks sem sentido
   _Em aberto: configuração adaptativa de chunk está fora do escopo do v0.1._
 
@@ -45,3 +49,7 @@
 - [x] `test_perguntar_string_muito_longa` — pergunta > 4096 chars retorna "Limite de" sem chamar a chain
 - [x] `test_rate_limit_retorna_mensagem_amigavel` — `RateLimitError` retorna mensagem sem propagar exceção
 - [x] `test_api_error_retorna_mensagem_amigavel` — `APIError` retorna mensagem sem propagar exceção
+- [x] `test_timeout_retorna_mensagem_amigavel` — `APITimeoutError` retorna "Tempo limite" sem propagar exceção
+- [x] `test_vectorstore_reutilizado_quando_hashes_coincidem` — manifest MD5 igual → vectorstore reutilizado sem rebuild
+- [x] `test_vectorstore_reconstruido_quando_pdf_alterado` — hash divergente → `delete_collection()` + warning "PDFs alterados"
+- [x] `test_upload_path_traversal_sanitizacao` — `Path(nome).name` extrai apenas basename, descartando `../`

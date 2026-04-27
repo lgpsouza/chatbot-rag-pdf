@@ -43,6 +43,16 @@ Desenvolver um chatbot conversacional com interface web (Streamlit) capaz de res
 | RF10 | O sistema deve permitir o upload de PDFs diretamente pela interface Streamlit, salvando-os em `data/` |
 | RF11 | O sistema deve disponibilizar um botão "Reindexar documentos" que reconstrói o vectorstore após novos uploads |
 
+## Requisitos adicionados após v0.2
+
+| ID | Requisito |
+| --- | --- |
+| RF12 | O sistema deve validar PDFs no upload e na listagem, exibindo aviso amigável e removendo automaticamente arquivos corrompidos ou sem texto selecionável |
+| RF13 | O sistema deve limitar o tamanho dos PDFs enviados a 50 MB por arquivo, ignorando os que excederem |
+| RF14 | O sistema deve sanitizar o nome do arquivo enviado para evitar path traversal (`Path(nome).name`) |
+| RT12 | O projeto deve disponibilizar um `Makefile` com targets `install`, `run` e `test` |
+| RT13 | O rebuild do vectorstore deve usar `delete_collection()` em vez de deletar o arquivo SQLite, evitando `SQLITE_READONLY_DBMOVED` |
+
 ---
 
 ## Fora de Escopo (v0.1)
@@ -66,6 +76,10 @@ Desenvolver um chatbot conversacional com interface web (Streamlit) capaz de res
 - [x] Perguntas sem resposta nos documentos retornam mensagem informativa, não alucinação silenciosa
 - [x] PDFs sem texto exibem aviso em vez de falha silenciosa
 - [x] Ausência de `OPENAI_API_KEY` gera erro descritivo antes de qualquer chamada à API
-- [x] Todos os testes unitários passam sem chamadas reais à API OpenAI (15/15 passando)
+- [x] Todos os testes unitários passam sem chamadas reais à API OpenAI (19/19 passando)
 - [x] Usuário pode fazer upload de PDFs pela interface sem acesso manual ao sistema de arquivos
 - [x] Botão "Reindexar" reconstrói o vectorstore e reinicia o chatbot com os novos documentos
+- [x] PDFs inválidos (corrompidos ou scans sem OCR) são rejeitados com aviso e removidos automaticamente de `data/`
+- [x] Upload de arquivo acima de 50 MB exibe aviso e não salva o arquivo
+- [x] Nomes de arquivo com path traversal são sanitizados silenciosamente
+- [x] `make install`, `make run` e `make test` funcionam sem ativar `.venv` manualmente
