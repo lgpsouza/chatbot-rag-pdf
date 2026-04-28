@@ -14,10 +14,13 @@ from embeddings import construir_vectorstore
 MAX_PERGUNTA_CHARS = 4096
 
 _PROMPT = ChatPromptTemplate.from_template(
-    "Responda a pergunta usando apenas o contexto abaixo.\n"
-    "Se o contexto não contiver informações suficientes, responda exatamente: "
-    "'Não encontrei informações sobre isso nos documentos fornecidos.'\n"
-    "Não invente respostas.\n\n"
+    "Você é um assistente especializado em responder perguntas sobre documentos PDF indexados.\n"
+    "Responda a pergunta usando APENAS o contexto abaixo. Não invente respostas.\n\n"
+    "Se o contexto não contiver informações suficientes para responder:\n"
+    "- Informe que não encontrou essa informação nos documentos fornecidos.\n"
+    "- Sugira como o usuário pode reformular a pergunta de forma mais específica, "
+    "mencionando termos técnicos, valores, etapas ou seções presentes no contexto.\n"
+    "- Se a pergunta for completamente fora do escopo do documento, indique isso com clareza.\n\n"
     "Contexto:\n{context}\n\n"
     "Pergunta: {question}"
 )
